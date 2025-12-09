@@ -346,6 +346,12 @@
             <label for="slowPercent">Slow%</label>
             <input type="number" id="slowPercent" min="0" max="50" step="1" value="0">
         </div>
+
+        <div class="form-group" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #3a3a3a;">
+            <button id="copyLinkButton" style="width: 100%; padding: 12px; background-color: #5a9; color: #fff; border: none; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                Copy Link
+            </button>
+        </div>
     </div>
 
     <div class="right-panel">
@@ -752,12 +758,125 @@
             highlightEIASRow(contributions.total);
         }
 
+        // Generate URL with all current input values as GET parameters
+        function generateShareLink() {
+            const params = new URLSearchParams();
+            
+            // Collect all input values
+            params.set('mhWSM', document.getElementById('mainHandWSM').value);
+            params.set('ohWSM', document.getElementById('offHandWSM').value);
+            params.set('mhIAS', document.getElementById('mainHandIAS').value);
+            params.set('ohIAS', document.getElementById('offHandIAS').value);
+            params.set('offWeaponIAS', document.getElementById('offWeaponIAS').value);
+            params.set('fanaticism', document.getElementById('fanaticism').value);
+            params.set('frenzy', document.getElementById('frenzy').value);
+            params.set('markOfTheBear', document.getElementById('markOfTheBear').checked ? '1' : '0');
+            params.set('burstOfSpeed', document.getElementById('burstOfSpeed').checked ? '1' : '0');
+            params.set('holyFreeze', document.getElementById('holyFreeze').value);
+            params.set('decrepify', document.getElementById('decrepify').checked ? '1' : '0');
+            params.set('chilled', document.getElementById('chilled').checked ? '1' : '0');
+            params.set('slowPercent', document.getElementById('slowPercent').value);
+            
+            return window.location.origin + window.location.pathname + '?' + params.toString();
+        }
+
+        // Copy link to clipboard
+        function copyLinkToClipboard() {
+            const link = generateShareLink();
+            
+            // Use the Clipboard API if available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(() => {
+                    const button = document.getElementById('copyLinkButton');
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.style.backgroundColor = '#4a8';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.backgroundColor = '#5a9';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    fallbackCopy(link);
+                });
+            } else {
+                fallbackCopy(link);
+            }
+        }
+
+        // Fallback copy method for older browsers
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const button = document.getElementById('copyLinkButton');
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.backgroundColor = '#4a8';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '#5a9';
+                }, 2000);
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Load parameters from URL and restore input values
+        function loadParametersFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            if (params.has('mhWSM')) document.getElementById('mainHandWSM').value = params.get('mhWSM');
+            if (params.has('ohWSM')) document.getElementById('offHandWSM').value = params.get('ohWSM');
+            if (params.has('mhIAS')) document.getElementById('mainHandIAS').value = params.get('mhIAS');
+            if (params.has('ohIAS')) document.getElementById('offHandIAS').value = params.get('ohIAS');
+            if (params.has('offWeaponIAS')) document.getElementById('offWeaponIAS').value = params.get('offWeaponIAS');
+            if (params.has('fanaticism')) document.getElementById('fanaticism').value = params.get('fanaticism');
+            if (params.has('frenzy')) document.getElementById('frenzy').value = params.get('frenzy');
+            if (params.has('markOfTheBear')) document.getElementById('markOfTheBear').checked = params.get('markOfTheBear') === '1';
+            if (params.has('burstOfSpeed')) document.getElementById('burstOfSpeed').checked = params.get('burstOfSpeed') === '1';
+            if (params.has('holyFreeze')) document.getElementById('holyFreeze').value = params.get('holyFreeze');
+            if (params.has('decrepify')) document.getElementById('decrepify').checked = params.get('decrepify') === '1';
+            if (params.has('chilled')) document.getElementById('chilled').checked = params.get('chilled') === '1';
+            if (params.has('slowPercent')) document.getElementById('slowPercent').value = params.get('slowPercent');
+        }
+
         // Add event listeners to all inputs
         document.addEventListener('DOMContentLoaded', function() {
+            // Load parameters from URL first
+            loadParametersFromURL();
+            
             const inputs = document.querySelectorAll('select, input[type="number"], input[type="checkbox"]');
             inputs.forEach(input => {
                 input.addEventListener('change', updateCalculations);
             });
+            
+            // Add click handler for copy link button
+            const copyLinkButton = document.getElementById('copyLinkButton');
+            if (copyLinkButton) {
+                copyLinkButton.addEventListener('click', copyLinkToClipboard);
+            }
+            
+            // Add hover effect
+            if (copyLinkButton) {
+                copyLinkButton.addEventListener('mouseenter', function() {
+                    if (this.textContent === 'Copy Link') {
+                        this.style.backgroundColor = '#6ba';
+                    }
+                });
+                copyLinkButton.addEventListener('mouseleave', function() {
+                    if (this.textContent === 'Copy Link') {
+                        this.style.backgroundColor = '#5a9';
+                    }
+                });
+            }
+            
             updateCalculations(); // Initial calculation
         });
     </script>
