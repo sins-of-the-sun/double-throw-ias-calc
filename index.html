@@ -251,6 +251,54 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="frenzy">Frenzy lvl</label>
+            <select id="frenzy">
+                <option value="0" selected>None (0 EIAS)</option>
+                <option value="7">lvl 1 (7 EIAS)</option>
+                <option value="13">lvl 2 (13 EIAS)</option>
+                <option value="18">lvl 3 (18 EIAS)</option>
+                <option value="22">lvl 4 (22 EIAS)</option>
+                <option value="25">lvl 5 (25 EIAS)</option>
+                <option value="27">lvl 6 (27 EIAS)</option>
+                <option value="29">lvl 7 (29 EIAS)</option>
+                <option value="31">lvl 8 (31 EIAS)</option>
+                <option value="33">lvl 9 (33 EIAS)</option>
+                <option value="34">lvl 10 (34 EIAS)</option>
+                <option value="35">lvl 11 (35 EIAS)</option>
+                <option value="36">lvl 12 (36 EIAS)</option>
+                <option value="37">lvl 13 (37 EIAS)</option>
+                <option value="38">lvl 14 (38 EIAS)</option>
+                <option value="39">lvl 15 (39 EIAS)</option>
+                <option value="40">lvl 16 (40 EIAS)</option>
+                <option value="40">lvl 17 (40 EIAS)</option>
+                <option value="41">lvl 18 (41 EIAS)</option>
+                <option value="41">lvl 19 (41 EIAS)</option>
+                <option value="42">lvl 20 (42 EIAS)</option>
+                <option value="42">lvl 21 (42 EIAS)</option>
+                <option value="43">lvl 22 (43 EIAS)</option>
+                <option value="43">lvl 23 (43 EIAS)</option>
+                <option value="44">lvl 24 (44 EIAS)</option>
+                <option value="44">lvl 25 (44 EIAS)</option>
+                <option value="44">lvl 26 (44 EIAS)</option>
+                <option value="45">lvl 27 (45 EIAS)</option>
+                <option value="45">lvl 28 (45 EIAS)</option>
+                <option value="45">lvl 29 (45 EIAS)</option>
+                <option value="45">lvl 30 (45 EIAS)</option>
+                <option value="46">lvl 31 (46 EIAS)</option>
+                <option value="46">lvl 32 (46 EIAS)</option>
+                <option value="46">lvl 33 (46 EIAS)</option>
+                <option value="46">lvl 34 (46 EIAS)</option>
+                <option value="46">lvl 35 (46 EIAS)</option>
+                <option value="47">lvl 36 (47 EIAS)</option>
+                <option value="47">lvl 37 (47 EIAS)</option>
+                <option value="47">lvl 38 (47 EIAS)</option>
+                <option value="47">lvl 39 (47 EIAS)</option>
+                <option value="47">lvl 40 (47 EIAS)</option>
+                <option value="47">lvl 41 (47 EIAS)</option>
+                <option value="48">lvl 42 (48 EIAS)</option>
+            </select>
+        </div>
+        <div class="form-group">
             <div class="checkbox-group">
                 <input type="checkbox" id="markOfTheBear">
                 <label for="markOfTheBear">Mark of the Bear (25 EIAS)</label>
@@ -501,6 +549,7 @@
             const wsmEIAS = calculateWSMEIAS();
             const iasData = calculateIASEIAS();
             const fanaticism = parseInt(document.getElementById('fanaticism').value) || 0;
+            const frenzy = parseInt(document.getElementById('frenzy').value) || 0;
             const markOfTheBear = document.getElementById('markOfTheBear').checked ? 25 : 0;
             const burstOfSpeed = document.getElementById('burstOfSpeed').checked ? 21 : 0;
             const holyFreeze = parseInt(document.getElementById('holyFreeze').value) || 0;
@@ -509,12 +558,13 @@
             const slowPercent = parseInt(document.getElementById('slowPercent').value) || 0;
             const slowEIAS = -slowPercent; // Linear mapping: 0 = 0 EIAS, 50 = -50 EIAS
 
-            const totalEIAS = wsmEIAS + iasData.averageEIAS + fanaticism + markOfTheBear + burstOfSpeed + holyFreeze + decrepify + chilled + slowEIAS;
+            const totalEIAS = wsmEIAS + iasData.averageEIAS + fanaticism + frenzy + markOfTheBear + burstOfSpeed + holyFreeze + decrepify + chilled + slowEIAS;
 
             return {
                 wsmEIAS,
                 iasData,
                 fanaticism,
+                frenzy,
                 markOfTheBear,
                 burstOfSpeed,
                 holyFreeze,
